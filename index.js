@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json()) // req.body
 app.use(cookieParser()) // req.cookies
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://zomato-lite-g1us.onrender.com",
     credentials: true // cookie
 }))
 
