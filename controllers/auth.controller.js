@@ -152,6 +152,8 @@ exports.loginCustomer = asyncHandler(async (req, res) => {
     const { userName } = req.body
 
     const result = await Customer.findOne({ $or: [{ email: userName }, { mobile: userName }] })
+    console.log(result);
+    
     if (!result) {
         return res.status(400).json({ message: "invalid credentials" })
     }
