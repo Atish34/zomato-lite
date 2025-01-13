@@ -22,7 +22,7 @@ exports.getLocation = asyncHandler(async(req,res) => {
     str += "" + data.results[0].components.postcode
 
 
-    res.json({message:"location fetch success",result:str,city})
+    res.json({message:"location fetch success",result:{address:str,city}})
     //setLoc(data.results[0].formatted)
 })
 
