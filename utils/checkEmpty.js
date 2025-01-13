@@ -4,7 +4,7 @@ exports.checkEmpty = (config) => {
     let isError = false
     const error = []
     for (const key in config) {
-        if (validator.isEmpty(config[key] ? config[key] : "")) {// isEMpty(confiq.mobile) isEMpty(confiq.address)
+        if (validator.isEmpty(config[key] ? toString(config[key] ) : "")) {// isEMpty(confiq.mobile) isEMpty(confiq.address)
             isError = true
             error.push(`${key} is required`)
         }
