@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler")
 const axios = require('axios')
 const { checkEmpty } = require("../utils/checkEmpty")
 const Customer = require("../models/Customer")
+const Resturant = require("../models/Resturant")
 
 exports.getLocation = asyncHandler(async(req,res) => {
     const {latitude,longitude} = req.body
@@ -43,4 +44,9 @@ exports.updateCustomerInfo = asyncHandler(async(req,res) => {
     },{new:true})
     res.json({message:"profile update success",result})
     //setLoc(data.results[0].formatted)
+})
+
+exports.getResturant = asyncHandler(async (req,res)=>{
+    const result = await Resturant.find(req.body)
+    res.json({message:"resturant get success",result})
 })
