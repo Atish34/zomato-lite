@@ -3,6 +3,7 @@ const axios = require('axios')
 const { checkEmpty } = require("../utils/checkEmpty")
 const Customer = require("../models/Customer")
 const Resturant = require("../models/Resturant")
+const Menu = require("../models/Menu")
 
 exports.getLocation = asyncHandler(async(req,res) => {
     const {latitude,longitude} = req.body
@@ -49,4 +50,8 @@ exports.updateCustomerInfo = asyncHandler(async(req,res) => {
 exports.getResturant = asyncHandler(async (req,res)=>{
     const result = await Resturant.find(req.body)
     res.json({message:"resturant get success",result})
+})
+exports.getMenu = asyncHandler(async (req,res)=>{
+    const result = await Menu.find(req.body)
+    res.json({message:"menu get success",result})
 })
