@@ -48,10 +48,10 @@ exports.updateCustomerInfo = asyncHandler(async(req,res) => {
 })
 
 exports.getResturant = asyncHandler(async (req,res)=>{
-    const result = await Resturant.find(req.body)
-    res.json({message:"resturant get success",result})
+    const result = await Resturant.find({isActive:true}).select("-password -createdAt -updatedAt -__v -certificate -infoComplete -isActive")
+    res.json({message:"resturant fetch success",result})
 })
-exports.getMenu = asyncHandler(async (req,res)=>{
-    const result = await Menu.find(req.body)
-    res.json({message:"menu get success",result})
+exports.getResturantMenu = asyncHandler(async (req,res)=>{
+    const result = await Menu.find({resturant:req.params.rid}).select("-createdAt -updatedAt -__v")
+    res.json({message:"menu fetch success",result})
 })
