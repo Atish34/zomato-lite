@@ -4,6 +4,7 @@ const { checkEmpty } = require("../utils/checkEmpty")
 const Customer = require("../models/Customer")
 const Resturant = require("../models/Resturant")
 const Menu = require("../models/Menu")
+const Order = require("../models/Order")
 
 exports.getLocation = asyncHandler(async(req,res) => {
     const {latitude,longitude} = req.body
@@ -51,7 +52,26 @@ exports.getResturant = asyncHandler(async (req,res)=>{
     const result = await Resturant.find({isActive:true}).select("-password -createdAt -updatedAt -__v -certificate -infoComplete -isActive")
     res.json({message:"resturant fetch success",result})
 })
+
 exports.getResturantMenu = asyncHandler(async (req,res)=>{
     const result = await Menu.find({resturant:req.params.rid}).select("-createdAt -updatedAt -__v")
     res.json({message:"menu fetch success",result})
+})
+
+exports.placedOrder = asyncHandler(async (req,res)=>{
+    const {resturant,items} = req.body
+    const {error,isError} = checkEmpty({resturant,items})
+    if(isError){
+        return res.status(400).json({message:"all fields required",error})
+    }
+    await Order.create({resturant,items,customer:req.user})
+    res.json({message:"order placed success"})
+})
+
+exports.getOrder = asyncHandler(async (req,res)=>{
+    const result = await Order
+    .find({customer:req.user}).select("-customer -createdAt -updatedAt -__v")
+    .populate("resturant","name hero")
+    .populate("items.dish","name type image")
+    res.json({message:"order get success",result})
 })
