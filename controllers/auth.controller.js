@@ -211,7 +211,7 @@ exports.logoutCustomer = asyncHandler(async (req, res) => {
 })
 
 exports.loginRider = asyncHandler(async (req, res) => {
-    const { userName } = req.body
+    const { userName,password } = req.body
 
     const result = await Rider.findOne({ $or: [{ email: userName }, { mobile: userName }] })
     
