@@ -1,4 +1,4 @@
-const { updateInfo, getMenu, updateMenu, deleteMenu, addMenu } = require("../controllers/resturant.controller")
+const { updateInfo, getMenu, updateMenu, deleteMenu, addMenu, getResturantOrders, updateResturantstatus } = require("../controllers/resturant.controller")
 
 const router = require("express").Router()
 
@@ -9,4 +9,6 @@ router
     .post("/add-Menu",addMenu)
     .put("/update-Menu/:mid",updateMenu)
     .delete("/delete-Menu/:mid",deleteMenu)
+    .get("/get-orders",getResturantOrders)
+    .put("/change-status/:oid",updateResturantstatus)
 module.exports = router

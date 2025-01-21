@@ -6,6 +6,7 @@ const { checkEmpty } = require("../utils/checkEmpty")
 const cloud = require("../utils/cloudinary")
 const Resturant = require("../models/Resturant")
 const Menu = require("../models/Menu")
+const Order = require("../models/Order")
 
 exports.updateInfo = asyncHandler(async (req, res) => {
     resturantUpload(req, res, async (err) => {
@@ -89,23 +90,23 @@ exports.getMenu = asyncHandler(async (req,res)=>{
 })
 
 exports.updateMenu = asyncHandler(async (req,res)=>{
-    UpdateMenuUpload(req,res,async (err) => {
-        if(err){
-            console.log(err);
-            return res.status(400).json({message:"unable to upload file"})            
-        }
-        console.log(req.file);
-        if (req.file) {
-          const result = await Menu.findById(req.params.mid)
-          await cloud.uploader.destroy(path.basename(result.image,path.extname(result.image)))
-          const {secure_url} = await cloud.uploader.upload(req.file.path)
-          console.log(secure_url)
-          
-          await Menu.findByIdAndUpdate(req.params.mid,{...req.body,image:secure_url})
-          res.json({message:"menu update success"})
-        } else {
-          await Menu.findByIdAndUpdate(req.params.mid,{...req.body})
-          res.json({message:"menu update success"})
+  UpdateMenuUpload(req,res,async (err) => {
+    if(err){
+      console.log(err);
+      return res.status(400).json({message:"unable to upload file"})            
+    }
+    console.log(req.file);
+    if (req.file) {
+      const result = await Menu.findById(req.params.mid)
+      await cloud.uploader.destroy(path.basename(result.image,path.extname(result.image)))
+      const {secure_url} = await cloud.uploader.upload(req.file.path)
+      console.log(secure_url)
+      
+      await Menu.findByIdAndUpdate(req.params.mid,{...req.body,image:secure_url})
+      res.json({message:"menu update success"})
+    } else {
+      await Menu.findByIdAndUpdate(req.params.mid,{...req.body})
+      res.json({message:"menu update success"})
         }
     })
 })
@@ -116,4 +117,19 @@ exports.deleteMenu = asyncHandler(async(req,res) => {
   const {mid} = req.params
   await Menu.findByIdAndDelete(mid)
   res.json({message:"menu delete success"})
+})
+
+exports.getResturantOrders = asyncHandler(async (req,res)=>{
+    const result = await Order
+    .find({resturant:req.user})
+    .select("-resturant -createdAt -updatedAt -__v")
+    .populate("customer","name address")
+    .populate("items.dish","name type image price")
+    .sort({createdAt: -1})
+    res.json({message:"order get success",result})
+})
+
+exports.updateResturantstatus = asyncHandler(async (req,res)=>{
+  await Order.findByIdAndUpdate(req.params.oid,{status:req.body.status})
+  res.json({message:"order status change success"})
 })
