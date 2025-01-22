@@ -33,7 +33,7 @@ exports.getAdminOrder = asyncHandler(async (req,res)=>{
     .select(" -createdAt -updatedAt -__v")
     .populate("resturant","name email mobile")
     .populate("rider","name mobile")
-    .populate("customer","name email mobile")
+    .populate("customer","name email mobile address")
     .populate("items.dish","name type price")
     .sort({createdAt: -1})
     .limit(limit)
