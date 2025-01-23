@@ -149,6 +149,11 @@ exports.assignRider = asyncHandler(async (req,res)=>{
     await Order.findByIdAndUpdate(oid,{rider:req.body.rider})
    
     const result = await Order.find({rider:req.body.rider})
+    .select("-rider -createdAt -updatedAt -__v")
+    .populate("resturant","name email mobile address")
+    .populate("customer","name email mobile address")
+    .populate("items.dish","name type price image")
+    .sort({createdAt: -1})
     io.emit("rider-orders",result)
     res.json({message:"rider assign success"})
 
