@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 require("dotenv").config()
 const cors = require("cors")
+const path = require("path")
 const cookieParser = require("cookie-parser")
 const { resturantProtected, customerProtected, adminProtected, riderProtected } = require("./middlewares/Protected")
 const { app, httpServer } = require("./socket/socket")
@@ -10,8 +11,9 @@ const { app, httpServer } = require("./socket/socket")
 
 app.use(express.json()) // req.body
 app.use(cookieParser()) // req.cookies
+app.use(express.static("dist")) // req.cookies
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: true,
     credentials: true // cookie
 }))
 
@@ -21,7 +23,8 @@ app.use("/api/customer", customerProtected, require("./routes/customer.routes"))
 app.use("/api/admin", adminProtected, require("./routes/admin.routes"))
 app.use("/api/rider", riderProtected, require("./routes/rider.routes"))
 app.use("*", (req, res) => {
-    res.status(404).json({ message: "resource not found" })
+    res.sendFile(path.join(__dirname,"dist","index.html"))
+    //res.status(404).json({ message: "resource not found" })
 })
 app.use((err, req, res, next) => {
     console.log(err)
