@@ -1,6 +1,5 @@
 const { getAdminResturant, getAdminCustomer, getAdminOrder, registerAdminRider, getAdminRider, updateAdminRider, updateRiderAccount, getAdminActiveRider, assignRider } = require("../controllers/admin.controller")
 
-
 const router = require("express").Router()
 
 router
