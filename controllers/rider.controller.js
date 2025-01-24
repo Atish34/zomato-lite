@@ -13,7 +13,6 @@ exports.getRiderOrder = asyncHandler(async (req,res)=>{
     .populate("customer","name email mobile address")
     .populate("items.dish","name type price image")
     .sort({createdAt: -1})
-    io.on("get-rider-order")
     res.json({message:"order fetch success",result})
 })
 
