@@ -1,4 +1,3 @@
-
 const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
@@ -7,7 +6,7 @@ const Admin = require('../models/Admin')
 const { generateOTP } = require('../utils/otp')
 const { sendEmail } = require('../utils/email')
 const { differenceInSeconds } = require('date-fns')
-const { sendSMS } = require('../utils/sms')
+//const { sendSMS } = require('../utils/sms')
 const Resturant = require('../models/Resturant')
 const Customer = require('../models/Customer')
 const Rider = require('../models/Rider')
@@ -86,8 +85,6 @@ exports.logoutAdmin = asyncHandler(async (req, res) => {
 
 exports.registerResturant = asyncHandler(async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body);
-
     const result = await Resturant.findOne({ email })
     if (result) {
         return res.status(409).json({ message: "email already registered" })
@@ -98,10 +95,8 @@ exports.registerResturant = asyncHandler(async (req, res) => {
 
 })
 
-exports.loginResturant = asyncHandler(async (req, res) => {
+exports.loginResturant = async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body);
-
     const result = await Resturant.findOne({ email })
     if (!result) {
         return res.status(401).json({ message: "invalid credentials email" })
@@ -124,26 +119,35 @@ exports.loginResturant = asyncHandler(async (req, res) => {
             _id: result._id,
             name: result.name,
             email: result.email,
-            infoComplete: result.infoComplete,
+            infoComplete: result.infoComplete
         }
     })
-})
+}
 
-exports.logoutResturant = asyncHandler(async (req, res) => {
+exports.logoutResturant = async (req, res) => {
     res.clearCookie("resturant")
     res.json({ message: "resturant logout success" })
-})
+}
+// resturant register
+// resturant login
+// resturant logout
 
+// customer register
+// customer login
+// customer logout
 
 exports.registerCustomer = asyncHandler(async (req, res) => {
-    const { email,name,mobile } = req.body
-    const result = await Customer.findOne({ $or:[
-        {mobile},
-        {email},
-    ] })
+    const { email, name, mobile } = req.body
+    const result = await Customer.findOne({
+        $or: [
+            { mobile },
+            { email },
+        ]
+    })
     if (result) {
         return res.status(409).json({ message: "email or mobile already registered" })
     }
+    // const hash = await bcrypt.hash(password, 10)
     await Customer.create(req.body)
     res.json({ message: "customer register success" })
 
@@ -153,8 +157,6 @@ exports.loginCustomer = asyncHandler(async (req, res) => {
     const { userName } = req.body
 
     const result = await Customer.findOne({ $or: [{ email: userName }, { mobile: userName }] })
-    console.log(result);
-    
     if (!result) {
         return res.status(400).json({ message: "invalid credentials" })
     }
@@ -209,12 +211,13 @@ exports.logoutCustomer = asyncHandler(async (req, res) => {
     res.clearCookie("zomato-customer")
     res.json({ message: "logout success" })
 })
+// rider login
+// rider logout
 
 exports.loginRider = asyncHandler(async (req, res) => {
-    const { userName,password } = req.body
+    const { userName, password } = req.body
 
     const result = await Rider.findOne({ $or: [{ email: userName }, { mobile: userName }] })
-    
     if (!result) {
         return res.status(400).json({ message: "invalid credentials" })
     }
@@ -237,13 +240,12 @@ exports.loginRider = asyncHandler(async (req, res) => {
             _id: result._id,
             name: result.name,
             email: result.email,
-            infoComplete: result.infoComplete,
+            infoComplete: result.infoComplete
         }
     })
-   
 })
 
 exports.logoutRider = asyncHandler(async (req, res) => {
     res.clearCookie("zomato-rider")
-    res.json({ message: "rider logout success" })
+    res.json({ message: "logout success" })
 })
