@@ -86,7 +86,7 @@ exports.getOrder = asyncHandler(async (req,res)=>{
 
 exports.getDeliveredOrder = asyncHandler(async (req,res)=>{
     const result = await Order
-    .find({status:'delivered'})
+    .find({ customer:req.user,status:'delivered'})
     .select("-customer -createdAt -updatedAt -__v")
     .populate("rider","name mobile")
     .populate("resturant","name hero")
